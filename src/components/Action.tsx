@@ -2,7 +2,7 @@ import React from "react";
 import {HexColorPicker} from "react-colorful";
 import Color from "../libs/color";
 
-export const Action = (props: { mode: string, color: Color, setColor: any, setUiColor: any}) => {
+export const Action = (props: { mode: string, color: Color, setColor: any, setUiColor: any, setDualColor: any, dualColor: any}) => {
   switch (props.mode) {
     case "off":
       return <div/>
@@ -24,6 +24,7 @@ export const Action = (props: { mode: string, color: Color, setColor: any, setUi
           color={props.color.color}
           onChange={(color) => {
             props.setUiColor(color)
+            props.setDualColor([color, props.dualColor[1]])
             props.setColor(new Color({value: props.mode, label: props.mode}))
           }}
         />
@@ -31,6 +32,7 @@ export const Action = (props: { mode: string, color: Color, setColor: any, setUi
           color={props.color.color}
           onChange={(color) => {
             props.setUiColor(color)
+            props.setDualColor([props.dualColor[0], color])
             props.setColor(new Color({value: props.mode, label: props.mode}))
           }}
         />

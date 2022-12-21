@@ -15,6 +15,8 @@ export default function App() {
   const [rainbow, setRainbow] = useState("#61dafb")
   const [mode, setMode] = useState('off')
   const [uiColor, setUiColor] = useState('#61dafb')
+  const [modeSet, setModeSet] = useState("Wyłączone")
+  const [dualColor, setDualColor] = useState(['#61dafb', '#61dafb'])
   setInterval(() => setRainbow("#" + Math.floor(Math.random() * 16777215).toString(16)), 1000)
 
   return (
@@ -27,7 +29,7 @@ export default function App() {
               mode === "dual" ? uiColor :
                 mode === "point" ? uiColor : 'black'
       }/>
-      <ModeInfo mode = {"Wyłączone"} color = {
+      <ModeInfo mode = {modeSet} color = {
         mode === "off" ? 'black' :
           mode === "rainbow" ? rainbow :
             mode === "static" ? uiColor :
@@ -71,6 +73,8 @@ export default function App() {
         color = {color}
         setColor = {setColor}
         setUiColor={setUiColor}
+        setDualColor={setDualColor}
+        dualColor={dualColor}
       />
       <button className="button" style={{
         backgroundColor: mode === "off" ? 'black' :
@@ -87,6 +91,7 @@ export default function App() {
                   try {
                     const res = await axios.get('http://localhost:3000/stop')
                     if (res.status === 200) {
+                      setModeSet("Wyłączone")
                       console.log("Wyłączono")
                       resolve()
                     } else {
@@ -114,7 +119,8 @@ export default function App() {
                     console.log(uiColor)
                     const res = await axios.get('http://localhost:3000/rainbow')
                     if (res.status === 200) {
-                      console.log("Włączono tryb rainbow")
+                      setModeSet("Tęcza")
+                      console.log("Włączono")
                       resolve()
                     } else {
                       console.log("Błąd")
@@ -140,7 +146,8 @@ export default function App() {
                   try {
                     const res = await axios.get(`http://localhost:3000/static?color=${selectedColor}`)
                     if (res.status === 200) {
-                      console.log("Włączono tryb statyczny")
+                      setModeSet("Statyczny")
+                      console.log("Włączono")
                       resolve()
                     } else {
                       console.log("Błąd")
@@ -165,9 +172,10 @@ export default function App() {
                 async (resolve, reject) => {
                   try {
                     //const res = await axios.get(`http://localhost:3000/dual?color=${uiColor}`)
-                    const res = await axios.get(`http://localhost:3000/redgreen`)
+                    const res = await axios.get(`http://localhost:3000/redgreen?colorA=${dualColor[0].replace('#', '0x')}&colorB=${dualColor[1].replace('#', '0x')}`)
                     if (res.status === 200) {
-                      console.log("Włączono tryb dual")
+                      setModeSet("Podwójny")
+                      console.log("Włączono")
                       resolve()
                     } else {
                       console.log("Błąd")
@@ -193,7 +201,8 @@ export default function App() {
                   try {
                     const res = await axios.get(`http://localhost:3000/point?color=${selectedColor}`)
                     if (res.status === 200) {
-                      console.log("Włączono tryb point")
+                      setModeSet("Punkt")
+                      console.log("Włączono")
                       resolve()
                     } else {
                       console.log("Błąd")
